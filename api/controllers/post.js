@@ -86,8 +86,9 @@ export const updatePost = (req, res) => {
       req.body.category,
     ];
 
-    db.query(q, [...values, postId, userInfo.id], (err, data) => {
+    db.query(q, [...values, postId, users.id], (err, data) => {
       if (err) return res.status(500).json(err);
+      console.log("Post has been updated.");
       return res.json("Post has been updated.");
     });
   });

@@ -4,41 +4,37 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 
-const BlogCategory = ({ category, data }) => {
-  console.log("data:", data);
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: data.length < 3 ? data.length : 3,
-    slidesToScroll: 1,
-  };
-
-  console.log("sliderSettings:", sliderSettings);
-
+const BlogCategory = ({ category, posts }) => {
   // Conditional rendering for fallback content when data is empty or null
-  if (!data || data.length === 0) {
+  if (!posts || posts.length === 0) {
     return (
-      <div className="technology blog-div row">
+      <div className={`${category.toLowerCase()} blog-div row`}>
         <h1 className="heading">{category}</h1>
         <p>No data available.</p>
       </div>
     );
   }
+  // Slider settings
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: posts.length < 3 ? posts.length : 3,
+    slidesToScroll: 1,
+  };
 
   return (
-    <div className="technology blog-div row">
+    <div className={`${category.toLowerCase()} blog-div row`}>
       <h1 className="heading">{category}</h1>
       <Slider {...sliderSettings}>
-        {data.map((post, index) => (
-          <div key={index}>
+        {posts.map((post) => (
+          <div key={post.id}>
             <div className="card">
               <Link to={`/Singleblog/${post.id}`} className="link">
                 <img
                   src={`../upload/${post.img}`}
                   className="card-img-top"
-                  alt={post.title} // Add descriptive alt text for the image
+                  alt={`Thumbnail for the blog post: ${post.title}`}
                 />
                 <div className="card-body">
                   <p className="card-text">{post.title}</p>

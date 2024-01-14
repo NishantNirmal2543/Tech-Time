@@ -4,37 +4,34 @@ import axios from "axios";
 import "../style.scss";
 
 const Register = () => {
+  // State to manage form inputs
   const [inputs, setInputs] = useState({
     username: "",
     email: "",
     password: "",
   });
 
+  // State to handle registration errors
   const [err, setError] = useState(null);
 
+  // React Router navigation hook
   const navigate = useNavigate();
 
+  // Event handler for input changes
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  console.log(inputs);
-
+  // Event handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Attempt to register user using axios
       await axios.post("/auth/register", inputs);
+
       navigate("/login");
     } catch (err) {
-      // console.log(err);
       setError(err.response.data);
-      // if (err.response && err.response.status === 409) {
-      //   setError("User already exists with that email or username.");
-      // } else {
-      //   setError(
-      //     "An error occurred during registration. Please try again later."
-      //   );
-      // }
       console.log(err);
     }
   };
@@ -42,14 +39,11 @@ const Register = () => {
   return (
     <div className="register p-4">
       <div className="register-content row">
-        <div
-          md="6"
-          className="col text-center text-md-start d-flex flex-column justify-content-center">
+        <div className="col text-center text-md-start d-flex flex-column justify-content-center">
           <h1 className="my-5 display-3 fw-bold ls-tight px-3">
             Join our Blogging Community: <br />
             <span className="text-primary">Register Now</span>
           </h1>
-
           <p className="px-3" style={{ color: "hsl(217, 10%, 50.8%)" }}>
             Welcome to our blogging website! Register below to join our
             community of writers and readers, create and publish your own blog
@@ -82,6 +76,7 @@ const Register = () => {
                   required
                 />
               </div>
+
               <div className="form-outline py-3">
                 <input
                   type="password"
@@ -95,10 +90,12 @@ const Register = () => {
 
               <button
                 onClick={handleSubmit}
-                className=" button btn btn-primary btn-block center mb-4">
+                className="button btn btn-primary btn-block center mb-4">
                 Register
               </button>
+
               {err && <p style={{ color: "red" }}>{err}</p>}
+
               <p>
                 Already have an account? <a href="login">Log in</a>
               </p>

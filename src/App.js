@@ -12,6 +12,7 @@ import Navba from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import "./style.scss";
+
 const Layout = () => {
   return (
     <>
@@ -21,6 +22,7 @@ const Layout = () => {
     </>
   );
 };
+
 const router = createBrowserRouter([
   {
     path: "/",

@@ -159,9 +159,6 @@ $lightGrey: hsl(0, 0%, 96%);
     color: #fff;
     padding: 20px;
     text-align: center;
-    // display: flex;
-    // align-items: center;
-    // justify-content: space-between;
     font-size: 14px;
     background-color: orangered;
 
@@ -277,16 +274,16 @@ $lightGrey: hsl(0, 0%, 96%);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 200px; /* Set the desired height for the card */
+        height: 200px;
 
         h1 {
-          font-size: 40px;
+          font-size: 30px;
           text-transform: capitalize;
         }
         p {
           font-size: 16px;
-          white-space: nowrap; /* Prevent line breaks within the text */
-          overflow: hidden; /* Hide any overflowing text */
+          white-space: nowrap;
+          overflow: hidden;
           text-overflow: ellipsis;
         }
         button {
@@ -310,7 +307,7 @@ $lightGrey: hsl(0, 0%, 96%);
   //Card
 
   .card {
-    width: 20rem;
+    // width: 20rem;
     .card-img-top {
       height: 13rem;
     }

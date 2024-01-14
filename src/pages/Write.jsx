@@ -2,49 +2,58 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
 const Write = () => {
+  // State variables
   const state = useLocation().state;
   const [value, setValue] = useState(state?.description || "");
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [category, setCat] = useState(state?.category || "");
+  const navigate = useNavigate();
 
+  // Function to upload a file
   const upload = async () => {
     try {
+      if (!file) {
+        return "";
+      }
       const formData = new FormData();
       formData.append("file", file);
+      // Use axios to post the file data
       const res = await axios.post("/upload", formData);
       return res.data;
     } catch (err) {
-      console.log(err);
+      console.error("Error uploading file:", err);
+      throw err;
     }
   };
 
+  // Handle click event for publishing a post
   const handleClick = async (e) => {
     e.preventDefault();
-    const imgUrl = await upload();
     try {
-      state
-        ? await axios.put(`/posts/${state.id}`, {
-            title,
-            description: value,
-            category,
-            img: file ? imgUrl : "",
-          })
-        : await axios.post(`/posts/`, {
-            title,
-            description: value,
-            category,
-            img: file ? imgUrl : "",
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
+      const imgUrl = file ? await upload() : state.img || "";
+      const postData = {
+        title,
+        description: value,
+        category,
+        img: imgUrl,
+        date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      };
 
-      window.location.reload();
+      // If there is state (editing existing post), make a PUT request, else POST request
+      if (state) {
+        await axios.put(`/posts/${state.id}`, postData);
+      } else {
+        await axios.post(`/posts/`, postData);
+      }
+
+      navigate("/");
     } catch (err) {
-      console.log(err);
+      console.error("Error creating/updating post:", err);
     }
   };
 
@@ -67,9 +76,11 @@ const Write = () => {
         </div>
       </div>
       <div className="menu col-lg-4 col-md-5 col-mb-12">
+        {/* Publish Section */}
         <div className="item">
           <h1>Publish</h1>
 
+          {/* File Upload Input */}
           <input
             style={{ display: "none" }}
             type="file"
@@ -80,12 +91,19 @@ const Write = () => {
           <label className="file" htmlFor="file">
             Upload Image
           </label>
+
+          {/* Publish Button */}
           <div className="buttons">
             <button onClick={handleClick}>Publish</button>
           </div>
         </div>
+
+        {/* Category Section */}
         <div className="item">
           <h1>Category</h1>
+
+          {/* Radio Buttons for Categories */}
+
           <div className="cat">
             <input
               type="radio"
@@ -143,7 +161,7 @@ const Write = () => {
               name="cat"
               value="emergingtechnologies"
               id="emergingtechnologies"
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setCat(e.target.value)}
             />
             <label htmlFor="emergingtechnologies">Emerging Technologies</label>
           </div>
